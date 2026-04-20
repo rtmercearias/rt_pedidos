@@ -17,7 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        :root { --primary: #1a237e; --secondary: #ffd600; --success: #2e7d32; }
+        :root { --primary: #1a237e; --secondary: #ffd600; --success: #2e7d32; --info: #007bff; }
         
         body { 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
@@ -103,6 +103,7 @@
         .btn-action { border: none; padding: 14px; width: 100%; border-radius: 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
         .btn-whatsapp { background: #25D366; color: white; }
         .btn-pdf { background: #f44336; color: white; }
+        .btn-copiar { background: var(--info); color: white; }
         .btn-voltar { background: #f1f1f1; color: #666; }
         .resumo-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f1f1; font-size: 0.85rem; }
     </style>
@@ -135,6 +136,7 @@
             </div>
         </div>
         <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp()">ENVIAR WHATSAPP</button>
+        <button class="btn-action btn-copiar" onclick="copiarPedido()">COPIAR TEXTO DO PEDIDO</button>
         <button class="btn-action btn-pdf" onclick="gerarPDF()">SALVAR PDF</button>
         <button class="btn-action btn-voltar" onclick="fecharModal()">VOLTAR</button>
     </div>
@@ -247,12 +249,33 @@
             jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
         };
 
-        html2pdf().set(opt).from(elemento).toPdf().get('pdf').then(function (pdf) {
-            pdf.save('Pedido_RT_Rogerio.pdf');
-            alert("O PDF foi gerado! Verifique sua pasta de Downloads.");
+        // Tenta abrir em nova aba para contornar bloqueio de download do APK
+        html2pdf().set(opt).from(elemento).toPdf().output('bloburl').then(function (url) {
+            window.open(url, '_blank');
+            alert("O PDF foi gerado! Se ele não abrir, utilize a opção 'COPIAR TEXTO'.");
         }).catch(err => {
-            alert("Erro ao gerar PDF no celular.");
-            console.error(err);
+            alert("Erro ao gerar PDF no dispositivo.");
+        });
+    }
+
+    function copiarPedido() {
+        let texto = "*PEDIDO RT MERCEARIAS - ROGÉRIO*\n\n";
+        Object.keys(bancoDados).forEach(cat => {
+            let tem = false;
+            let sub = `*--- ${cat} ---*\n`;
+            bancoDados[cat].forEach(p => {
+                if(pedidoGlobal[p] > 0) {
+                    sub += `✅ ${pedidoGlobal[p]}x - ${p}\n`;
+                    tem = true;
+                }
+            });
+            if(tem) texto += sub + "\n";
+        });
+
+        navigator.clipboard.writeText(texto).then(() => {
+            alert("Pedido copiado! Agora você pode colar no WhatsApp ou em outro app.");
+        }).catch(() => {
+            alert("Não foi possível copiar automaticamente. Tente selecionar o texto e copiar.");
         });
     }
 
