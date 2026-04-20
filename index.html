@@ -269,3 +269,7 @@
 
 </body>
 </html>
+// Ativando o modo Aplicativo
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js');
+}
