@@ -239,8 +239,21 @@
 
     function gerarPDF() {
         const elemento = document.getElementById('pdf-area');
-        const opt = { margin: 10, filename: 'Pedido_RT_Rogerio.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } };
-        html2pdf().set(opt).from(elemento).save();
+        const opt = { 
+            margin: 10, 
+            filename: 'Pedido_RT_Rogerio.pdf', 
+            image: { type: 'jpeg', quality: 0.98 }, 
+            html2canvas: { scale: 2, useCORS: true }, 
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
+        };
+
+        html2pdf().set(opt).from(elemento).toPdf().get('pdf').then(function (pdf) {
+            pdf.save('Pedido_RT_Rogerio.pdf');
+            alert("O PDF foi gerado! Verifique sua pasta de Downloads.");
+        }).catch(err => {
+            alert("Erro ao gerar PDF no celular.");
+            console.error(err);
+        });
     }
 
     function enviarWhatsApp() {
@@ -259,7 +272,6 @@
         window.open(`https://api.whatsapp.com/send?phone=5513988672197&text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    // REGISTRO DO SERVICE WORKER (IMPORTANTE PARA O APK)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js');
     }
