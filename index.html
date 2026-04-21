@@ -3,24 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RT Pedidos</title>
+    <title>RT Pedidos - Rogério</title>
     <link rel="manifest" href="manifest.json">
     
     <meta name="theme-color" content="#1a237e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="RT Pedidos">
-    
-    <link rel="icon" type="image/png" href="logo.png">
-    <link rel="apple-touch-icon" href="logo.png">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     
     <style>
-        :root { --primary: #1a237e; --secondary: #ffd600; --success: #2e7d32; --info: #007bff; }
+        :root { --primary: #1a237e; --secondary: #ffd600; --success: #2e7d32; --info: #007bff; --danger: #c62828; }
         
         body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            font-family: 'Segoe UI', Roboto, sans-serif; 
             background-color: #f0f2f5; 
             margin: 0; 
             padding-bottom: 120px; 
@@ -37,8 +33,6 @@
             top: 0;
             z-index: 1000;
         }
-        header h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
-        header p { margin: 5px 0 0; font-size: 0.8rem; opacity: 0.8; }
 
         .nav-tabs { 
             display: flex; 
@@ -47,7 +41,7 @@
             top: 75px; 
             z-index: 900; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.1); 
-            overflow-x: auto; 
+            overflow-x: auto;
             scrollbar-width: none;
         }
         .nav-tabs::-webkit-scrollbar { display: none; }
@@ -58,10 +52,8 @@
             background: none; 
             font-weight: bold; 
             color: #999; 
-            cursor: pointer; 
             border-bottom: 3px solid transparent; 
             white-space: nowrap;
-            font-size: 0.85rem;
         }
         .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); background: #f8f9ff; }
 
@@ -77,35 +69,43 @@
             justify-content: space-between; 
             box-shadow: 0 2px 4px rgba(0,0,0,0.04); 
         }
-        .product-info h3 { margin: 0; font-size: 0.9rem; color: #333; line-height: 1.3; max-width: 70%; }
-        
-        .controls { display: flex; align-items: center; gap: 10px; background: #f8f9fa; border-radius: 10px; padding: 6px; border: 1px solid #eee; }
+        .product-info h3 { margin: 0; font-size: 0.9rem; color: #333; line-height: 1.3; }
+
+        .controls { display: flex; align-items: center; gap: 10px; background: #f8f9fa; border-radius: 10px; padding: 6px; }
         .btn-qty { 
             background: var(--primary); color: white; border: none; width: 32px; height: 32px; 
-            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1.3rem; 
-            display: flex; align-items: center; justify-content: center; 
+            border-radius: 8px; font-weight: bold; font-size: 1.3rem; cursor: pointer;
         }
-        .qty-value { font-weight: 800; min-width: 28px; text-align: center; font-size: 1.1rem; color: var(--primary); }
 
         .footer { 
             position: fixed; bottom: 0; width: 100%; background: white; 
             padding: 20px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.08); text-align: center; 
             z-index: 1000; border-radius: 20px 20px 0 0;
         }
+
         #btn-finalizar { 
             background: var(--success); color: white; border: none; padding: 16px 45px; 
             border-radius: 50px; font-size: 1rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
         }
 
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-body { background: white; padding: 20px; border-radius: 20px; width: 92%; max-width: 450px; box-sizing: border-box; max-height: 85vh; overflow-y: auto; }
-        .btn-action { border: none; padding: 14px; width: 100%; border-radius: 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 0.9rem; }
-        .btn-whatsapp { background: #25D366; color: white; }
-        .btn-pdf { background: #f44336; color: white; }
-        .btn-copiar { background: var(--info); color: white; }
-        .btn-voltar { background: #f1f1f1; color: #666; }
-        .resumo-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f1f1; font-size: 0.85rem; }
+        .modal-body { background: white; padding: 20px; border-radius: 20px; width: 92%; max-width: 450px; max-height: 85vh; overflow-y: auto; }
+        
+        .btn-action { border: none; padding: 14px; width: 100%; border-radius: 12px; margin-top: 10px; font-weight: bold; color: white; cursor: pointer; }
+        
+        .faltas-container { margin-top: 15px; border-top: 2px dashed #ccc; padding-top: 15px; }
+        .faltas-label { display: block; font-weight: bold; color: var(--danger); margin-bottom: 8px; font-size: 0.9rem; }
+        .faltas-textarea { 
+            width: 100%; 
+            height: 80px; 
+            border-radius: 10px; 
+            border: 1px solid #ccc; 
+            padding: 10px; 
+            box-sizing: border-box; 
+            font-family: inherit;
+            resize: none;
+            background: #fff9f9;
+        }
     </style>
 </head>
 <body>
@@ -129,32 +129,38 @@
         <div id="pdf-area">
             <h2 style="text-align: center; color: #1a237e; margin-bottom: 5px;">RT Mercearias</h2>
             <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top:0;">Responsável: Rogério</p>
-            <hr style="border: 0; border-top: 1px solid #eee;">
             <div id="resumo-lista"></div>
-            <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid #1a237e;">
-                <h3 id="total-final" style="text-align: right; color: #2e7d32; margin:0;"></h3>
+            
+            <div class="faltas-container">
+                <label class="faltas-label">⚠️ FALTAS DE MERCADORIA:</label>
+                <textarea id="txt-faltas" class="faltas-textarea" placeholder="Digite aqui o que está faltando no estoque..."></textarea>
+            </div>
+
+            <div style="margin-top: 15px; border-top: 2px solid #1a237e;">
+                <h3 id="total-final" style="text-align: right; color: #2e7d32;"></h3>
             </div>
         </div>
-        <button class="btn-action btn-whatsapp" onclick="enviarWhatsApp()">ENVIAR WHATSAPP</button>
-        <button class="btn-action btn-copiar" onclick="copiarPedido()">COPIAR TEXTO DO PEDIDO</button>
-        <button class="btn-action btn-pdf" onclick="gerarPDF()">SALVAR PDF</button>
-        <button class="btn-action btn-voltar" onclick="fecharModal()">VOLTAR</button>
+
+        <button class="btn-action" style="background: #25D366;" onclick="enviarWhatsApp()">ENVIAR WHATSAPP</button>
+        <button class="btn-action" style="background: var(--info);" onclick="copiarPedido()">COPIAR TEXTO</button>
+        <button class="btn-action" style="background: var(--danger);" onclick="gerarPDF()">SALVAR PDF</button>
+        <button class="btn-action" style="background: #999;" onclick="fecharModal()">VOLTAR</button>
     </div>
 </div>
 
 <script>
     const bancoDados = {
-        "BRF": ["Margarina Claybom 250g (Cx 24)", "Margarina Qualy 250g (Cx 24)", "Margarina Qualy 500g (Cx 12)", "Filé de Peito Sadia 1kg (Cx 12)", "Lasanha Perdigão 600g (Cx 6)", "Linguiça Calabresa 400g (Cx 10)", "Nuggets Queijo Sadia (Cx 16)", "Nuggets Tradic. Sadia (Cx 16)", "Steak Frango Sadia (Cx 45)", "Steak Recheado (cx)", "Sobrecoxa Perdigão 1,2kg (Cx 6)", "Steak Frango Perdigão (Cx 45)", "Sobrecoxa Assa Fácil Perdigão 1,2kg (Cx 6)"],
-        "PHILIP MORRIS": ["Marlboro Red Box", "Marlboro Melância","Marlboro Blue ice","Marlboro forest fusion", "L&M Azul", "L&M Vermelho", "Chesterfield terras", "Chesterfield Melância","Chesterfield Vermelho", "Chesterfield Azul"],
-        "SOUZA CRUZ": ["Dunhill Carlton", "Dunhill Red", "Rothmans Global", "Rothmans Azul", "Rothmans Red","Rothmans Prata", "Rothmans Melância", "Rothmans Melão", "Rothmans Longo"],
-        "PAMPLONA": ["Salame italiano 100g (Cx12)", "Calabresa 400g (Cx 12)", "ling.tipo calabresa fininha 240g (Cx 08)", "Queijo Mussarela 150g (Cx 12)", "Presunto Cozido 150g (Cx 12)", "Linguiça toscana 880g (Cx 10)", "Bacon (Cx)", "kit Feiojoada (Cx)"],
-        "AMBEV": ["Skol 350ml (cx18)", "Skol 269ml (cx15)", "Original 269ml (cx15)", "Budweiser 269ml (cx15)", "Budweiser ZERO (cx8)", "Brahma Duplo lata 269ml (cx15)", "Brahama Periguete (cx24)", "Guaraná 1.5L (6un)", "Guaraná ZERO 1.5L (6un)", "Pepsi 1.5L (6un)", "Guaraná 1L (2un)", "Tonica Lata (12un)", "H2oh Limão 500ml (12un)", "H2oh Limoneto 500ml (12un)", "Gatorade Morango (6un)", "Gatorade Limão (6un)", "Gatorade Tangerina (6un)", "Gatorade Laranja (6un)", "Gatorade Azul (6un)", "Gatorade Uva (6un)", "RedBull 250ml (6un)", "Smirnoff Ice (24un)", "Skol Beats Azul (12un)"],
-        "COCA-COLA": ["Coca-Cola 2L RET (9un)", "Coca-Cola ZERO 2L RET (9un)", "Laranja RET (9un)", "Uva RET (9un)", "Coca-Cola 1L Vidro (12un)", "Coca-Cola Lata (12un)", "Coca-Cola ZERO Lata (12un)", "Coca-Cola COFFE (6un)", "Fanta Laranja Lata (12un)", "Fanta Uva Lata (6un)", "Sprite Lata (6un)", "Sprite ZERO Lata (6un)", "Fanta Guaraná Lata (6un)", "Coca-Cola 2L (6un)", "Coca-Cola ZERO 2L (6un)", "Fanta Uva 2L (6un)", "Fanta Laranja 2L (6un)", "Sprite 2L (6un)", "Sprite ZERO 2L (6un)", "Kuat 2L (6un)", "Schweepes 1.5L (6un)", "Coca-Cola 600ml (12un)", "Coca-Cola ZERO 600ml (12un)", "Coca-Cola Mini (12un)", "Coca-Cola ZERO Mini (12un)", "Monster Energy (6un)", "Mosnter Mango (6un)", "Powerade Azul (6un)","Powerade uva (6un)", "Powerade Laranja (6un)", "Powerade Vermelho (6un)", "Guaraná leão (6un)", "Chá Pessego peq. (6un)", "Chá Pessego 1.5L (6un)","DV Laranja (Barriguda) pet 1L (6un)", "DV Uva (Barriguda) pet 1L (6un)", "Kapo Uva (12un)", "Kapo Morango (12un)", "Ades Maça 1L (6un)", "Ades Uva 1L (6un)", "DelValle Uva cx 1L (6un)", "DelValle Laranja cx 1L (6un)"],
-        "IMPÉRIO": ["Império 350ml (cx15)", "Império 269ml (cx15)", "Puro Malte (AZUL) 269ml (cx12)", "Império ZERO 350ml (cx12)", "Ultra (cx24)", "Tutsy Tubaina 2L (6un)","Tutsy Guaraná 2L (6un)", "Agua c/gas (cx12)", "Leev Limão (6un)", "Leev Morango (6un)", "Leev Abacaxi (6un)"],
-        "ITAIPAVA": ["Itaipava 350ml (cx12)", "Itaipava Zero (cx12)", "Petra 269ml (cx12)", "Malzebier 350ml (cx12)", "It Guaraná 2L (6un)", "It Laranja 2L (6un)", "It Limão 2L (6un)", "It Cola 2L (6un)", "It Ice Lemon 2L (6un)", "Cabaré ice Limâo (6un)", "Cabaré ice Tangerina (6un)", "Cabaré ice Amarela (6un)", "Cabaré ice Vermelha (6un)","TNT Trad. 269ml (4un)", "TNT Tangerina 269ml (4un)", "TNT Mango 269ml (4un)", "TNT Açai 269ml (4un)"],
-        "ADEGA": ["Heineken 330ml(Cx 24)", "Heineken 269ml(Cx 8)", "Amstel 269ml(Cx 12)", "Guaraviton (Cx 12)", "Velho Barreiro(Cx 6)", "Cantinho do Vale(Cx 12)", "Stempel Chop Vinho (Cx 6)", "Pitu lata(Cx 12)"],
-        "PANCO": ["Pão de Forma Tradicional(cx10)", "Bisnaguinha (un.)", "Pão Milho (un.)", "Pão Egg (un.)", "Pão Sovado (un.)", "Pão Integral (un.)", "Bolo Chocolate(un.)", "Bolo Laranja (un.)", "Bolo Chocoboy (un.)", "Bolo Abacaxi (un.)", "Bolo Milho (un.)", "Bolo Coco (un.)", "Bolo Formigueiro (un.)", "Bolo Gotas Choco.(un.)","Bolinho Chocolate (un.)", "Bolinho Morango (un.)","Sequilho 350g (un.)","Rosquinha Coco 350g (un.)", "Rosquinha Leite 350g (un.)", "Corn-Drop 350g (un.)", "Pão de Mel C/Cobert. (un.)", "Pão de Mel (un.)", "Wafer Chocolate (cx)"],
-        "AGUAS": ["Agua peq.500ml (12un)", "Agua C/gás 500ml (12un)", "Agua 1.5L (6un)", "Agua C/gás 1.5L (6un)", "Agua 5L (un)"]
+        "BRF": ["Margarina Claybom 250g (Cx 24)", "Margarina Qualy 250g (Cx 24)", "Margarina Qualy 500g (Cx 12)", "Filé de Peito Sadia 1kg (Cx 12)", "Lasanha Perdigão 600g (Cx 6)", "Linguiça Calabresa 400g (Cx 10)", "Nuggets Queijo Sadia (Cx 16)", "Nuggets Tradic. Sadia (Cx 16)", "Steak Frango Sadia (Cx 45)", "Steak Recheado (cx)", "Sobrecoxa Perdigão 1,2kg (Cx 6)", "Steak Frango Perdigão (Cx 45)"],
+        "PHILIP MORRIS": ["Marlboro Red Box", "Marlboro Melância","Marlboro Blue ice", "L&M Azul", "L&M Vermelho", "Chesterfield Vermelho", "Chesterfield Azul"],
+        "SOUZA CRUZ": ["Dunhill Carlton", "Dunhill Red", "Rothmans Global", "Rothmans Azul", "Rothmans Red"],
+        "PAMPLONA": ["Salame italiano 100g", "Calabresa 400g", "Queijo Mussarela 150g", "Presunto Cozido 150g", "Bacon (Cx)"],
+        "AMBEV": ["Skol 350ml (cx18)", "Skol 269ml (cx15)", "Original 269ml (cx15)", "Budweiser 269ml (cx15)", "Guaraná 1.5L (6un)", "H2oh Limão 500ml (12un)", "RedBull 250ml (6un)"],
+        "COCA-COLA": ["Coca-Cola 2L RET (9un)", "Coca-Cola 1L Vidro (12un)", "Coca-Cola Lata (12un)", "Fanta Laranja 2L (6un)", "Monster Energy (6un)", "Powerade Azul (6un)"],
+        "IMPÉRIO": ["Império 350ml (cx15)", "Império 269ml (cx15)", "Tutsy Tubaina 2L (6un)", "Agua c/gas (cx12)"],
+        "ITAIPAVA": ["Itaipava 350ml (cx12)", "Petra 269ml (cx12)", "TNT Trad. 269ml (4un)"],
+        "ADEGA": ["Heineken 330ml(Cx 24)", "Heineken 269ml(Cx 8)", "Amstel 269ml(Cx 12)", "Velho Barreiro(Cx 6)"],
+        "PANCO": ["Pão de Forma Tradicional", "Bisnaguinha", "Bolo Chocolate", "Rosquinha Coco 350g", "Wafer Chocolate"],
+        "AGUAS": ["Agua peq.500ml (12un)", "Agua 1.5L (6un)", "Agua 5L (un)"]
     };
 
     let pedidoGlobal = {}; 
@@ -162,15 +168,6 @@
 
     Object.keys(bancoDados).forEach(cat => {
         bancoDados[cat].forEach(p => pedidoGlobal[p] = 0);
-    });
-
-    const tabBar = document.getElementById('tabBar');
-    Object.keys(bancoDados).forEach((cat, index) => {
-        const btn = document.createElement('button');
-        btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
-        btn.innerText = cat;
-        btn.onclick = (e) => mudarCategoria(cat, e.target);
-        tabBar.appendChild(btn);
     });
 
     function mudarCategoria(cat, btn) {
@@ -181,6 +178,15 @@
         renderizar();
     }
 
+    const tabBar = document.getElementById('tabBar');
+    Object.keys(bancoDados).forEach((cat, index) => {
+        const btn = document.createElement('button');
+        btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+        btn.innerText = cat;
+        btn.onclick = (e) => mudarCategoria(cat, e.target);
+        tabBar.appendChild(btn);
+    });
+
     function renderizar() {
         const divLista = document.getElementById('lista');
         divLista.innerHTML = "";
@@ -190,7 +196,7 @@
             card.innerHTML = `<div class="product-info"><h3>${p}</h3></div>
                 <div class="controls">
                     <button class="btn-qty" onclick="mudarQty('${p}', -1)">-</button>
-                    <span class="qty-value" id="qty-${p}">${pedidoGlobal[p]}</span>
+                    <span id="qty-${p}" style="font-weight:bold; min-width:20px; text-align:center;">${pedidoGlobal[p]}</span>
                     <button class="btn-qty" onclick="mudarQty('${p}', 1)">+</button>
                 </div>`;
             divLista.appendChild(card);
@@ -199,12 +205,7 @@
 
     function mudarQty(prod, delta) {
         pedidoGlobal[prod] = Math.max(0, pedidoGlobal[prod] + delta);
-        const display = document.getElementById(`qty-${prod}`);
-        if(display) display.innerText = pedidoGlobal[prod];
-        atualizarContadorFooter();
-    }
-
-    function atualizarContadorFooter() {
+        document.getElementById(`qty-${prod}`).innerText = pedidoGlobal[prod];
         const total = Object.values(pedidoGlobal).reduce((a, b) => a + b, 0);
         document.getElementById('total-itens').innerText = total;
     }
@@ -213,27 +214,17 @@
         const listaUI = document.getElementById('resumo-lista');
         listaUI.innerHTML = "";
         let totalGeral = 0;
-
         Object.keys(bancoDados).forEach(cat => {
-            let tem = false;
-            const containerCat = document.createElement('div');
-            containerCat.innerHTML = `<p style="font-weight:bold; color:#1a237e; margin: 15px 0 5px 0; font-size: 0.9rem;">📦 ${cat}</p>`;
-            
+            let sub = "";
             bancoDados[cat].forEach(p => {
                 if(pedidoGlobal[p] > 0) {
-                    tem = true;
-                    const row = document.createElement('div');
-                    row.className = 'resumo-item';
-                    row.innerHTML = `<span>${p}</span> <strong>${pedidoGlobal[p]}x</strong>`;
-                    containerCat.appendChild(row);
+                    sub += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #eee; font-size:0.85rem;"><span>${p}</span> <strong>${pedidoGlobal[p]}x</strong></div>`;
                     totalGeral += pedidoGlobal[p];
                 }
             });
-            if(tem) listaUI.appendChild(containerCat);
+            if(sub) listaUI.innerHTML += `<p style="font-weight:bold; color:var(--primary); margin:15px 0 5px 0;">📦 ${cat}</p>` + sub;
         });
-
-        if (totalGeral === 0) return alert("Seu pedido está vazio!");
-        document.getElementById('total-final').innerText = "Total de Itens: " + totalGeral;
+        document.getElementById('total-final').innerText = "Total Itens: " + totalGeral;
         document.getElementById('modal').style.display = 'flex';
     }
 
@@ -241,24 +232,15 @@
 
     function gerarPDF() {
         const elemento = document.getElementById('pdf-area');
-        const opt = { 
-            margin: 10, 
-            filename: 'Pedido_RT_Rogerio.pdf', 
-            image: { type: 'jpeg', quality: 0.98 }, 
-            html2canvas: { scale: 2, useCORS: true }, 
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
-        };
-
-        // Tenta abrir em nova aba para contornar bloqueio de download do APK
-        html2pdf().set(opt).from(elemento).toPdf().output('bloburl').then(function (url) {
-            window.open(url, '_blank');
-            alert("O PDF foi gerado! Se ele não abrir, utilize a opção 'COPIAR TEXTO'.");
-        }).catch(err => {
-            alert("Erro ao gerar PDF no dispositivo.");
+        const opt = { margin: 10, filename: 'Pedido_Rogerio_RT.pdf', html2canvas: { scale: 2 }, jsPDF: { unit: 'mm', format: 'a4' } };
+        html2pdf().set(opt).from(elemento).toPdf().get('pdf').then(function(pdf) {
+            pdf.save();
+            alert("Pedido salvo! Procure na sua pasta de Downloads.");
         });
     }
 
     function copiarPedido() {
+        let faltas = document.getElementById('txt-faltas').value;
         let texto = "*PEDIDO RT MERCEARIAS - ROGÉRIO*\n\n";
         Object.keys(bancoDados).forEach(cat => {
             let tem = false;
@@ -271,32 +253,23 @@
             });
             if(tem) texto += sub + "\n";
         });
-
-        navigator.clipboard.writeText(texto).then(() => {
-            alert("Pedido copiado! Agora você pode colar no WhatsApp ou em outro app.");
-        }).catch(() => {
-            alert("Não foi possível copiar automaticamente. Tente selecionar o texto e copiar.");
-        });
+        if(faltas) texto += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas + "\n";
+        navigator.clipboard.writeText(texto).then(() => alert("Copiado! Basta colar no WhatsApp."));
     }
 
     function enviarWhatsApp() {
+        let faltas = document.getElementById('txt-faltas').value;
         let msg = "*PEDIDO RT MERCEARIAS - ROGÉRIO*\n\n";
         Object.keys(bancoDados).forEach(cat => {
             let tem = false;
             let sub = `*--- ${cat} ---*\n`;
             bancoDados[cat].forEach(p => {
-                if(pedidoGlobal[p] > 0) {
-                    sub += `✅ ${pedidoGlobal[p]}x - ${p}\n`;
-                    tem = true;
-                }
+                if(pedidoGlobal[p] > 0) { sub += `✅ ${pedidoGlobal[p]}x - ${p}\n`; tem = true; }
             });
             if(tem) msg += sub + "\n";
         });
+        if(faltas) msg += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas + "\n";
         window.open(`https://api.whatsapp.com/send?phone=5513988672197&text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js');
     }
 
     renderizar();
