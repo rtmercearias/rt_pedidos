@@ -97,7 +97,7 @@
         .faltas-label { display: block; font-weight: bold; color: var(--danger); margin-bottom: 8px; font-size: 0.9rem; }
         .faltas-textarea { 
             width: 100%; 
-            height: 80px; 
+            height: 120px; 
             border-radius: 10px; 
             border: 1px solid #ccc; 
             padding: 10px; 
@@ -105,6 +105,8 @@
             font-family: inherit;
             resize: none;
             background: #fff9f9;
+            line-height: 1.5;
+            white-space: pre-wrap; /* Garante que as quebras de linha apareçam */
         }
     </style>
 </head>
@@ -132,8 +134,8 @@
             <div id="resumo-lista"></div>
             
             <div class="faltas-container">
-                <label class="faltas-label">⚠️ FALTAS DE MERCADORIA:</label>
-                <textarea id="txt-faltas" class="faltas-textarea" placeholder="Digite aqui o que está faltando no estoque..."></textarea>
+                <label class="faltas-label">⚠️ FALTAS DE MERCADORIA (Um por linha):</label>
+                <textarea id="txt-faltas" class="faltas-textarea" placeholder="Item 1&#10;Item 2&#10;Item 3..."></textarea>
             </div>
 
             <div style="margin-top: 15px; border-top: 2px solid #1a237e;">
@@ -160,7 +162,7 @@
         "ITAIPAVA": ["Itaipava 350ml (cx12)", "Petra 269ml (cx12)", "TNT Trad. 269ml (4un)"],
         "ADEGA": ["Heineken 330ml(Cx 24)", "Heineken 269ml(Cx 8)", "Amstel 269ml(Cx 12)", "Velho Barreiro(Cx 6)"],
         "PANCO": ["Pão de Forma Tradicional", "Bisnaguinha", "Bolo Chocolate", "Rosquinha Coco 350g", "Wafer Chocolate"],
-        "AGUAS": ["Agua peq.500ml (12un)", "Agua 1.5L (6un)", "Agua 5L (un)"]
+        "AGUAS": ["Agua peq.500ml (12un)", "Agua C/gás 500ml (12un)", "Agua 1.5L (6un)", "Agua 5L (un)"]
     };
 
     let pedidoGlobal = {}; 
@@ -253,7 +255,9 @@
             });
             if(tem) texto += sub + "\n";
         });
-        if(faltas) texto += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas + "\n";
+        if(faltas.trim()) {
+            texto += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas.trim() + "\n";
+        }
         navigator.clipboard.writeText(texto).then(() => alert("Copiado! Basta colar no WhatsApp."));
     }
 
@@ -268,7 +272,9 @@
             });
             if(tem) msg += sub + "\n";
         });
-        if(faltas) msg += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas + "\n";
+        if(faltas.trim()) {
+            msg += "*⚠️ FALTAS DE MERCADORIA:*\n" + faltas.trim() + "\n";
+        }
         window.open(`https://api.whatsapp.com/send?phone=5513988672197&text=${encodeURIComponent(msg)}`, '_blank');
     }
 
