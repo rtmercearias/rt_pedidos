@@ -63,7 +63,6 @@
             display: flex; align-items: center; justify-content: center;
         }
         
-        /* Estilo do botão de cheque */
         .btn-check { background: #eee; color: #bbb; }
         .product-card.selected .btn-check { background: var(--success); color: white; }
 
@@ -219,13 +218,18 @@
 
     function limparPedido() {
         if(confirm("Deseja zerar todo o pedido atual?")) {
-            pedidoGlobal = {};
-            localStorage.removeItem('pedido_rt_rogerio');
-            fecharModais();
-            renderizar();
-            renderizarAbas();
-            atualizarContador();
+            zerarDadosSistema();
         }
+    }
+
+    // Função interna para limpar tudo sem confirmação (usada no envio)
+    function zerarDadosSistema() {
+        pedidoGlobal = {};
+        localStorage.removeItem('pedido_rt_rogerio');
+        fecharModais();
+        renderizar();
+        renderizarAbas();
+        atualizarContador();
     }
 
     function filtrarProdutos() {
@@ -269,14 +273,27 @@
             bancoDados[cat].forEach(p => { if(pedidoGlobal[p]) sub += `✅${pedidoGlobal[p]}x ${p}\n`; });
             if(sub) { msg += `*${cat}*\n${sub}\n`; temItens = true; }
         });
+        
         if(!temItens) return alert("Pedido vazio!");
+        
+        // Abre o WhatsApp
         window.open(`https://wa.me/5513988672197?text=${encodeURIComponent(msg)}`, '_blank');
+
+        // Limpa o pedido logo após o envio
+        setTimeout(() => {
+            zerarDadosSistema();
+            alert("Pedido enviado! O formulário foi reiniciado.");
+        }, 500);
     }
 
     function enviarFaltas() {
         const texto = document.getElementById('faltas-texto').value;
         if(!texto) return alert("Digite algo!");
         window.open(`https://wa.me/5513988672197?text=${encodeURIComponent("*RELATÓRIO DE FALTAS*\n\n" + texto)}`, '_blank');
+        
+        // Limpa o campo de faltas após enviar
+        document.getElementById('faltas-texto').value = "";
+        fecharModais();
     }
 
     renderizarAbas();
