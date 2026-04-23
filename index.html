@@ -3,94 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RT Pedidos</title>
+    <title>RT Pedidos Pro</title>
     
     <style>
-        :root { --primary: #1a237e; --secondary: #ffd600; --success: #2e7d32; --info: #007bff; --danger: #d32f2f; --warning: #ff9800; }
+        :root { 
+            --primary: #1a237e; 
+            --secondary: #ffd600; 
+            --success: #2e7d32; 
+            --danger: #c62828;
+            --bg: #f4f7f6;
+        }
         
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; padding-bottom: 180px; user-select: none; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background-color: var(--bg); margin: 0; padding-bottom: 200px; user-select: none; color: #333; }
 
-        header { background: var(--primary); color: white; text-align: center; padding: 15px; border-bottom: 4px solid var(--secondary); position: sticky; top: 0; z-index: 1000; }
+        header { 
+            background: var(--primary); color: white; text-align: center; padding: 20px 15px; 
+            border-bottom: 4px solid var(--secondary); position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
         
-        .search-container { background: white; padding: 10px; position: sticky; top: 65px; z-index: 950; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        #search-input { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .search-container { background: white; padding: 12px; position: sticky; top: 82px; z-index: 950; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        #search-input { 
+            width: 100%; padding: 14px; border: 2px solid #eee; border-radius: 12px; 
+            box-sizing: border-box; font-size: 16px; outline: none; transition: 0.3s;
+        }
+        #search-input:focus { border-color: var(--primary); }
 
-        .nav-tabs { display: flex; background: #fff; position: sticky; top: 127px; z-index: 900; overflow-x: auto; border-bottom: 1px solid #eee; scrollbar-width: none; }
+        .nav-tabs { 
+            display: flex; background: #fff; position: sticky; top: 153px; z-index: 900; 
+            overflow-x: auto; border-bottom: 1px solid #ddd; gap: 5px; padding: 5px;
+        }
         .nav-tabs::-webkit-scrollbar { display: none; }
-        .tab-btn { padding: 15px 20px; border: none; background: none; font-weight: bold; color: #999; white-space: nowrap; cursor: pointer; display: flex; align-items: center; }
-        .tab-btn.active { color: var(--primary); border-bottom: 3px solid var(--primary); }
+        
+        .tab-btn { 
+            padding: 10px 18px; border: none; background: #f8f9fa; border-radius: 20px;
+            font-weight: 600; color: #666; white-space: nowrap; cursor: pointer;
+            transition: 0.2s; border: 1px solid transparent;
+        }
+        .tab-btn.active { background: var(--primary); color: white; }
 
-        .badge-tab { background: var(--danger); color: white; font-size: 0.7rem; padding: 2px 7px; border-radius: 10px; margin-left: 6px; font-weight: 800; }
+        .badge-tab { background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 8px; margin-left: 5px; vertical-align: middle; }
 
         .container { max-width: 600px; margin: 15px auto; padding: 0 12px; }
         
-        .product-card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 4px rgba(0,0,0,0.04); transition: 0.3s; }
-        .product-card.selected { border-left: 5px solid var(--success); background-color: #f1f8e9; }
+        .product-card { 
+            background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; 
+            display: flex; align-items: center; justify-content: space-between; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; transition: 0.2s;
+        }
+        .product-card.selected { border-color: var(--success); background-color: #f1f8e9; }
         
-        .controls { display: flex; align-items: center; gap: 10px; background: #f8f9fa; border-radius: 8px; padding: 5px; }
-        .btn-qty { background: var(--primary); color: white; border: none; width: 35px; height: 35px; border-radius: 6px; font-weight: bold; font-size: 1.2rem; cursor: pointer; }
-        .qty-value { font-weight: 800; min-width: 25px; text-align: center; color: var(--primary); font-size: 1.1rem; }
+        .product-info h3 { margin: 0; font-size: 1rem; color: #2c3e50; line-height: 1.2; flex: 1; padding-right: 10px; }
 
-        .footer { position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 0; box-shadow: 0 -4px 15px rgba(0,0,0,0.1); z-index: 1000; border-radius: 20px 20px 0 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+        .controls { display: flex; align-items: center; gap: 12px; background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 4px; }
         
-        .btn-footer { border: none; padding: 14px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; cursor: pointer; width: 85%; max-width: 400px; transition: transform 0.1s; }
-        .btn-footer:active { transform: scale(0.98); }
-        .btn-ver-resumo { background: var(--success); color: white; }
-        .btn-registrar-falta { background: var(--warning); color: white; }
-
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-body { background: white; padding: 20px; border-radius: 20px; width: 92%; max-width: 450px; box-sizing: border-box; max-height: 85vh; overflow-y: auto; }
+        .btn-qty { 
+            background: var(--primary); color: white; border: none; width: 38px; height: 38px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+        }
         
-        #faltas-texto { width: 100%; border: 2px solid #ffe0b2; border-radius: 10px; padding: 15px; box-sizing: border-box; font-family: inherit; font-size: 1.1rem; margin-top: 10px; background: #fffcf5; resize: none; }
+        /* Estilo do botão de cheque */
+        .btn-check { background: #eee; color: #bbb; }
+        .product-card.selected .btn-check { background: var(--success); color: white; }
 
-        .btn-action { border: none; padding: 15px; width: 100%; border-radius: 12px; margin-top: 10px; cursor: pointer; font-weight: bold; font-size: 1rem; }
-        .btn-whatsapp { background: #25D366; color: white; }
-        .btn-voltar { background: #f5f5f5; color: #666; }
-        .resumo-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f1f1; }
+        .qty-value { font-weight: 700; min-width: 20px; text-align: center; font-size: 1.1rem; }
+
+        .footer { 
+            position: fixed; bottom: 0; width: 100%; background: white; padding: 15px 0; 
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.1); z-index: 1000; border-radius: 25px 25px 0 0; 
+            display: flex; flex-direction: column; align-items: center; gap: 8px; 
+        }
+        
+        .btn-footer { border: none; padding: 15px; border-radius: 15px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 90%; max-width: 400px; }
+        .btn-ver-resumo { background: var(--primary); color: white; }
+        .btn-registrar-falta { background: #eceff1; color: #455a64; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-body { background: white; padding: 25px; border-radius: 25px; width: 90%; max-width: 450px; box-sizing: border-box; max-height: 80vh; overflow-y: auto; }
+        
+        .btn-limpar { background: #fff1f0; color: var(--danger); border: 1px solid var(--danger); margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>RT Mercearias</h1>
-    <p style="margin:2px 0; font-size: 0.8rem; opacity: 0.9;">Gestão de Pedidos - Rogério</p>
+    <div style="font-size: 1.5rem; font-weight: 800; letter-spacing: -1px;">RT MERCEARIAS</div>
+    <div style="font-size: 0.85rem; opacity: 0.9;">📱 Pedidos Express - Rogério</div>
 </header>
 
 <div class="search-container">
-    <input type="text" id="search-input" placeholder="🔍 Buscar produto..." oninput="filtrarProdutos()">
+    <input type="text" id="search-input" placeholder="🔍 Buscar em todo o catálogo..." oninput="filtrarProdutos()">
 </div>
 
 <div class="nav-tabs" id="tabBar"></div>
+
 <div class="container" id="lista"></div>
 
 <div class="footer">
     <button class="btn-footer btn-ver-resumo" onclick="abrirModalResumo()">
-        📦 VER RESUMO DO PEDIDO (<span id="total-itens">0</span>)
+        🛒 REVISAR PEDIDO (<span id="total-itens">0</span>)
     </button>
     <button class="btn-footer btn-registrar-falta" onclick="abrirModalFaltas()">
-        📝 DIGITAR FALTAS DO DIA
+        📝 RELATAR FALTAS
     </button>
 </div>
 
 <div id="modal-resumo" class="modal">
     <div class="modal-body">
-        <h2 style="text-align: center; color: var(--primary); margin-top: 0;">Resumo do Pedido</h2>
+        <h2 style="margin-top:0">Seu Pedido</h2>
+        <button class="btn-footer btn-limpar" onclick="limparPedido()">🗑️ ZERAR TUDO</button>
         <div id="resumo-lista"></div>
-        <div style="margin-top: 15px; padding-top: 10px; border-top: 2px solid var(--primary);">
-            <h3 id="total-final" style="text-align: right; color: var(--success); margin:0;"></h3>
-        </div>
-        <button class="btn-action btn-whatsapp" onclick="enviarPedido()">ENVIAR PEDIDO VIA WHATSAPP</button>
-        <button class="btn-action btn-voltar" onclick="fecharModais()">VOLTAR</button>
+        <div id="total-final" style="font-weight: 800; font-size: 1.2rem; margin: 15px 0; text-align: right; color: var(--success);"></div>
+        <button class="btn-footer btn-ver-resumo" style="background:#25D366; width:100%" onclick="enviarPedido()">ENVIAR WHATSAPP</button>
+        <button class="btn-footer" style="background:none; color:#666; width:100%" onclick="fecharModais()">FECHAR</button>
     </div>
 </div>
 
 <div id="modal-faltas" class="modal">
     <div class="modal-body">
-        <h2 style="text-align: center; color: var(--warning); margin-top: 0;">Relatar Faltas</h2>
-        <p style="font-size: 0.9rem; color: #666; text-align: center;">Escreva abaixo os itens que estão faltando ou observações importantes:</p>
-        <textarea id="faltas-texto" rows="8" placeholder="Ex: Acabou o Arroz X, o fornecedor Y não entregou o pedido de ontem..."></textarea>
-        <button class="btn-action btn-whatsapp" onclick="enviarFaltas()">ENVIAR FALTAS PELO WHATSAPP</button>
-        <button class="btn-action btn-voltar" onclick="fecharModais()">CANCELAR</button>
+        <h2>Relatar Faltas</h2>
+        <textarea id="faltas-texto" style="width:100%; border-radius:10px; padding:10px; border:1px solid #ccc" rows="6" placeholder="O que está faltando hoje?"></textarea>
+        <button class="btn-footer btn-ver-resumo" style="background:#25D366; width:100%; margin-top:10px" onclick="enviarFaltas()">ENVIAR FALTAS</button>
+        <button class="btn-footer" style="background:none; color:#666; width:100%" onclick="fecharModais()">CANCELAR</button>
     </div>
 </div>
 
@@ -110,62 +145,69 @@
     };
 
     let pedidoGlobal = JSON.parse(localStorage.getItem('pedido_rt_rogerio')) || {};
-    let abaAtual = "BRF";
-    const tabBar = document.getElementById('tabBar');
+    let abaAtual = Object.keys(bancoDados)[0];
 
     function renderizarAbas() {
+        const tabBar = document.getElementById('tabBar');
         tabBar.innerHTML = '';
-        Object.keys(bancoDados).forEach((cat) => {
-            let qtdNaCategoria = 0;
-            bancoDados[cat].forEach(p => {
-                if (pedidoGlobal[p] > 0) qtdNaCategoria += pedidoGlobal[p];
-            });
-
+        Object.keys(bancoDados).forEach(cat => {
+            let qtd = 0;
+            bancoDados[cat].forEach(p => qtd += (pedidoGlobal[p] || 0));
+            
             const btn = document.createElement('button');
             btn.className = `tab-btn ${cat === abaAtual ? 'active' : ''}`;
-            const badge = qtdNaCategoria > 0 ? `<span class="badge-tab">${qtdNaCategoria}</span>` : '';
-            btn.innerHTML = `${cat}${badge}`;
-            btn.onclick = () => mudarCategoria(cat);
+            btn.innerHTML = `${cat}${qtd > 0 ? `<span class="badge-tab">${qtd}</span>` : ''}`;
+            btn.onclick = () => { abaAtual = cat; renderizar(); renderizarAbas(); };
             tabBar.appendChild(btn);
         });
-    }
-
-    function mudarCategoria(cat) {
-        abaAtual = cat;
-        renderizarAbas();
-        renderizar();
-    }
-
-    function filtrarProdutos() {
-        renderizar(document.getElementById('search-input').value.toLowerCase());
     }
 
     function renderizar(filtro = "") {
         const divLista = document.getElementById('lista');
         divLista.innerHTML = "";
         
-        let produtos = filtro 
-            ? Object.values(bancoDados).flat().filter(p => p.toLowerCase().includes(filtro))
-            : bancoDados[abaAtual];
+        let produtosParaExibir = [];
+        if(filtro) {
+            Object.values(bancoDados).flat().forEach(p => {
+                if(p.toLowerCase().includes(filtro.toLowerCase())) produtosParaExibir.push(p);
+            });
+        } else {
+            produtosParaExibir = bancoDados[abaAtual];
+        }
 
-        produtos.forEach(p => {
+        produtosParaExibir.forEach(p => {
             const qtd = pedidoGlobal[p] || 0;
             const card = document.createElement('div');
             card.className = `product-card ${qtd > 0 ? 'selected' : ''}`;
-            card.innerHTML = `<h3>${p}</h3>
+            card.innerHTML = `
+                <div class="product-info"><h3>${p}</h3></div>
                 <div class="controls">
-                    <button class="btn-qty" onclick="mudarQty('${p}', -1)">-</button>
-                    <span class="qty-value" id="qty-${p}">${qtd}</span>
+                    <button class="btn-qty btn-check" onclick="alternarCheck('${p}')">✓</button>
+                    <span class="qty-value">${qtd}</span>
                     <button class="btn-qty" onclick="mudarQty('${p}', 1)">+</button>
                 </div>`;
             divLista.appendChild(card);
         });
     }
 
+    function alternarCheck(prod) {
+        if (pedidoGlobal[prod] > 0) {
+            delete pedidoGlobal[prod];
+        } else {
+            pedidoGlobal[prod] = 1;
+        }
+        atualizarTudo();
+    }
+
     function mudarQty(prod, delta) {
         pedidoGlobal[prod] = Math.max(0, (pedidoGlobal[prod] || 0) + delta);
+        if(pedidoGlobal[prod] === 0) delete pedidoGlobal[prod];
+        atualizarTudo();
+    }
+
+    function atualizarTudo() {
         localStorage.setItem('pedido_rt_rogerio', JSON.stringify(pedidoGlobal));
-        renderizar();
+        renderizar(document.getElementById('search-input').value);
         renderizarAbas();
         atualizarContador();
     }
@@ -175,60 +217,68 @@
         document.getElementById('total-itens').innerText = total;
     }
 
+    function limparPedido() {
+        if(confirm("Deseja zerar todo o pedido atual?")) {
+            pedidoGlobal = {};
+            localStorage.removeItem('pedido_rt_rogerio');
+            fecharModais();
+            renderizar();
+            renderizarAbas();
+            atualizarContador();
+        }
+    }
+
+    function filtrarProdutos() {
+        const termo = document.getElementById('search-input').value;
+        renderizar(termo);
+    }
+
     function abrirModalResumo() {
         const listaUI = document.getElementById('resumo-lista');
         listaUI.innerHTML = "";
         let total = 0;
+        
         Object.keys(bancoDados).forEach(cat => {
-            let htmlCat = "";
-            let temItens = false;
+            let itensCat = "";
             bancoDados[cat].forEach(p => {
-                if(pedidoGlobal[p] > 0) {
-                    htmlCat += `<div class="resumo-item"><span>${p}</span> <strong>${pedidoGlobal[p]}x</strong></div>`;
+                if(pedidoGlobal[p]) {
+                    itensCat += `<div style="display:flex; justify:space-between; padding:5px 0; border-bottom:1px solid #eee">
+                        <span style="flex:1">${p}</span> <b>${pedidoGlobal[p]}x</b>
+                    </div>`;
                     total += pedidoGlobal[p];
-                    temItens = true;
                 }
             });
-            if(temItens) {
-                listaUI.innerHTML += `<p style="font-weight:bold; color:var(--primary); margin:15px 0 5px; border-bottom: 1px solid #ddd;">📦 ${cat}</p>` + htmlCat;
+            if(itensCat) {
+                listaUI.innerHTML += `<p style="color:var(--primary); font-weight:800; margin:15px 0 5px"># ${cat}</p>` + itensCat;
             }
         });
-        if(total === 0) listaUI.innerHTML = "<p style='text-align:center; color:#999;'>Nenhum item selecionado.</p>";
-        document.getElementById('total-final').innerText = "Total Geral: " + total + " itens";
+        
+        if(total === 0) listaUI.innerHTML = "<p style='text-align:center; color:#999'>Vazio...</p>";
+        document.getElementById('total-final').innerText = "Total: " + total + " itens";
         document.getElementById('modal-resumo').style.display = 'flex';
     }
 
-    function abrirModalFaltas() { 
-        document.getElementById('modal-faltas').style.display = 'flex'; 
-    }
-    
-    function fecharModais() { 
-        document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); 
-    }
+    function abrirModalFaltas() { document.getElementById('modal-faltas').style.display = 'flex'; }
+    function fecharModais() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
 
     function enviarPedido() {
-        let msg = "*PEDIDO RT MERCEARIAS - ROGÉRIO*\n\n";
-        let temAlgo = false;
+        let msg = "*NOVO PEDIDO - RT MERCEARIAS*\n\n";
+        let temItens = false;
         Object.keys(bancoDados).forEach(cat => {
             let sub = "";
-            bancoDados[cat].forEach(p => { if(pedidoGlobal[p] > 0) sub += `✅ ${pedidoGlobal[p]}x - ${p}\n`; });
-            if(sub) { msg += `*--- ${cat} ---*\n${sub}\n`; temAlgo = true; }
+            bancoDados[cat].forEach(p => { if(pedidoGlobal[p]) sub += `✅${pedidoGlobal[p]}x ${p}\n`; });
+            if(sub) { msg += `*${cat}*\n${sub}\n`; temItens = true; }
         });
-        if(!temAlgo) return alert("Adicione pelo menos um item!");
+        if(!temItens) return alert("Pedido vazio!");
         window.open(`https://wa.me/5513988672197?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     function enviarFaltas() {
-        const faltas = document.getElementById('faltas-texto').value;
-        if(!faltas.trim()) return alert("Por favor, digite as faltas antes de enviar!");
-        
-        let msg = `*RELATÓRIO DE FALTAS - ROGÉRIO*\n\n${faltas}`;
-        window.open(`https://wa.me/5513988672197?text=${encodeURIComponent(msg)}`, '_blank');
-        fecharModais();
-        document.getElementById('faltas-texto').value = ""; // Limpa para a próxima
+        const texto = document.getElementById('faltas-texto').value;
+        if(!texto) return alert("Digite algo!");
+        window.open(`https://wa.me/5513988672197?text=${encodeURIComponent("*RELATÓRIO DE FALTAS*\n\n" + texto)}`, '_blank');
     }
 
-    // Inicialização
     renderizarAbas();
     renderizar();
     atualizarContador();
