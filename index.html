@@ -270,7 +270,7 @@
         let temItens = false;
         Object.keys(bancoDados).forEach(cat => {
             let sub = "";
-            bancoDados[cat].forEach(p => { if(pedidoGlobal[p]) sub += `✅${pedidoGlobal[p]}x ${p}\n`; });
+            bancoDados[cat].forEach(p => { if(pedidoGlobal[p]) sub += `🔸${pedidoGlobal[p]}x ${p}\n`; });
             if(sub) { msg += `*${cat}*\n${sub}\n`; temItens = true; }
         });
         
